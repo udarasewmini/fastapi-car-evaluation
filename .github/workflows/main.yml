@@ -1,0 +1,31 @@
+name: Deploy FastAPI App to Railway
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Tests
+        run: pytest # if you have test scripts
+
+      - name: Deploy to Railway
+        run: |
+          curl -X POST https://api.railway.app/v1/services/20b6defb-ae48-4269-a371-7ef74c5cd420/deploys \
+          -H "Authorization: Bearer ec3481cf-caf5-450c-9f26-7b74eb6d3ea7"
